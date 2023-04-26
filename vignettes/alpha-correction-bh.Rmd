@@ -1,0 +1,19 @@
+---
+title: "alpha-correction-bh"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{alpha-correction-bh}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(alpha.correction.bh)
+```

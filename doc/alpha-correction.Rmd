@@ -1,36 +1,56 @@
-# Alpha Correction R Package
+---
+title: "alpha-correction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{alpha-correction}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
-### `library(alpha-correction-bh)`
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(alpha.correction)
+```
 
 ## Introduction
-This package provides functions for calculating alpha corrections for a list of p-values according to the _Benjamini-Hochberg_ alpha correction.
 
-Reference:
-Benjamini, Y., & Hochberg, Y. (1995). Controlling the false discovery rate: a practical and powerful approach to multiple testing. Journal of the Royal Statistical Society: series B (Methodological), 57(1), 289-300.
+This package provides functions for calculating alpha corrections for a
+list of p-values according to the *Benjamini-Hochberg* alpha correction.
 
-For a sorted list containing _m_ p-values indexed from  _1_ to _m_, the alpha for each p-value _p_ is computed as:
+For a sorted list containing m sorted p-values indexed from 1 to m, the
+alpha for each p-value is computed as:
 
-                          alpha(i) = (p_value(i)/m)Q
+                              alpha(i) = (p_value(i)/m)Q
+
 where:
 
-- _i_ is the index of the p-value in list _l_ (1 to m),
-- _p_value(i)_ is the p_value at index i, and 
-- Q is the false discovery rate, which is 0.05 by default.
+-   *i* is the index of the p-value in list *l* (1 to m),
+-   *p_value(i)* is the p_value at index i, and
+-   Q is the false discovery rate, which is 0.05 by default.
 
 ## Installation
 
-Install the package using dev-tools directly from github or from cran.
+Install the package using dev tools directly from github.
 
-`devtools::install_github('pcla-code/alpha.correction.bh')`
+`devtools::install_github('pcla-code/alpha.correction')`
 
-## Dependencies
+## Depndencies
 This library uses *knitr* to render tables.
 
 ## Usage
 
 Import the package:
 
-`library(alpha-correction-bh)`
+`library(alpha.correction)`
 
 `library(knitr)`
 
@@ -84,11 +104,3 @@ Output:
 |0.08    |0.07  |NO              |
 |0.01    |0.023 |YES             |
 |0.039   |0.047 |YES             |
-
-### Documentation
-
-To read the documentation of the function, execute the following in R:
-
-`?get_alphas_bh`
-
-You can also read the vignette [here](https://htmlpreview.github.io/?https://github.com/pcla-code/alpha-correction-bh/blob/develop/doc/alpha-correction.html).
