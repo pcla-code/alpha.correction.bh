@@ -1,4 +1,4 @@
-Package: alpha-correction-bh
+Package: alpha.correction.bh
 Title: Benjamini-Hochberg Alpha Correction
 Version: 0.0.1
 Authors@R: 

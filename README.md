@@ -1,6 +1,6 @@
 # Alpha Correction R Package
 
-### `library(edu.upenn.pcla.alpha.correction.bh)`
+### `library(alpha-correction-bh)`
 
 ## Introduction
 This package provides functions for calculating alpha corrections for a list of p-values according to the _Benjamini-Hochberg_ alpha correction.
@@ -30,7 +30,7 @@ This library uses *knitr* to render tables.
 
 Import the package:
 
-`library(edu.upenn.pcla.alpha.correction.bh)`
+`library(alpha-correction-bh)`
 
 `library(knitr)`
 
@@ -91,4 +91,4 @@ To read the documentation of the function, execute the following in R:
 
 `?get_alphas_bh`
 
-You can also read the vignette [here](https://htmlpreview.github.io/?https://github.com/pcla-code/edu.upenn.pcla.alpha.correction/blob/develop/doc/alpha-correction.html).
+You can also read the vignette [here](https://htmlpreview.github.io/?https://github.com/pcla-code/alpha-correction-bh/blob/develop/doc/alpha-correction.html).
