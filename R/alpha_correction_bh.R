@@ -2,7 +2,7 @@
 #'
 #' This function calculates alphas for a list of p-values and for a given false
 #' discovery rate (Q). If Q is not provided, a default value of 0.05 is used.
-#' The Benjamini-Hochberg alpha corrected is calculated as:
+#' The Benjamini-Hochberg alpha correction is calculated as:
 #' alpha=(i/m)Q, where:
 #' i = the individual p-value's rank in the list of p-values,
 #' m = the total number of tests, and
@@ -59,14 +59,16 @@ get_alphas_bh <-
     alphas = list()
     p_value_indexes <- names(sorted_p_values_map)
     triples <- list()
+    sig <- TRUE
     for (i in 1:size) {
       curr_alpha <- (i / size) * Q
       curr_p_value <- as.double(p_values[as.integer(p_value_indexes[i])])
       alphas = append(alphas, curr_alpha)
-      is_significant <- if (curr_p_value < curr_alpha)
-        'YES'
-      else
-        'NO'
+
+      is_significant_logical <- sig && (curr_p_value < curr_alpha)
+      is_significant <- ifelse(is_significant_logical, "YES", "NO")
+      sig <- is_significant_logical
+
       triples[[as.integer(p_value_indexes[i])]] <-
         list(curr_p_value, round(curr_alpha, digits = 3), is_significant)
     }

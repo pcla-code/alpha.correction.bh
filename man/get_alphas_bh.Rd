@@ -39,7 +39,7 @@ are not valid.
 \description{
 This function calculates alphas for a list of p-values and for a given false
 discovery rate (Q). If Q is not provided, a default value of 0.05 is used.
-The Benjamini-Hochberg alpha corrected is calculated as:
+The Benjamini-Hochberg alpha correction is calculated as:
 alpha=(i/m)Q, where:
 i = the individual p-value's rank in the list of p-values,
 m = the total number of tests, and
