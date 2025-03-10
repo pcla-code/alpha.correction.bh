@@ -79,15 +79,15 @@ test_that("it should calculate alphas 2", {
 test_that("it should calculate alphas 3", {
   # Given
   triples <- list()
-  triples[[1]] <- list(0.03, 0.025, 'NO')
-  triples[[2]] <- list(0.04, 0.05, 'NO')
+  triples[[1]] <- list(0.02, 0.025, 'YES')
+  triples[[2]] <- list(0.03, 0.05, 'YES')
 
   expected_df = as.data.frame(do.call(rbind, triples))
   colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
 
   # When
   actual_df <-
-    get_alphas_bh(list(0.03, 0.04), output = "data_frame")
+    get_alphas_bh(list(0.02, 0.03), output = "data_frame")
 
   # Then
   expect_equal(actual_df, expected_df)
