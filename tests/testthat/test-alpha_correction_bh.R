@@ -61,16 +61,50 @@ test_that("it should calculate alphas 1", {
 test_that("it should calculate alphas 2", {
   # Given
   triples <- list()
-  triples[[1]] <- list(0.08, 0.07, 'NO')
-  triples[[2]] <- list(0.01, 0.023, 'YES')
-  triples[[3]] <- list(0.039, 0.047, 'YES')
+  triples[[1]] <- list(0.08, 0.05, 'NO')
+  triples[[2]] <- list(0.01, 0.017, 'YES')
+  triples[[3]] <- list(0.039, 0.033, 'NO')
 
   expected_df = as.data.frame(do.call(rbind, triples))
   colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
 
   # When
   actual_df <-
-    get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame", .07)
+    get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame")
+
+  # Then
+  expect_equal(actual_df, expected_df)
+})
+
+test_that("it should calculate alphas 3", {
+  # Given
+  triples <- list()
+  triples[[1]] <- list(0.02, 0.025, 'YES')
+  triples[[2]] <- list(0.03, 0.05, 'YES')
+
+  expected_df = as.data.frame(do.call(rbind, triples))
+  colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+
+  # When
+  actual_df <-
+    get_alphas_bh(list(0.02, 0.03), output = "data_frame")
+
+  # Then
+  expect_equal(actual_df, expected_df)
+})
+
+test_that("it should calculate alphas and return NO after the first result comes out non-significant", {
+  # Given
+  triples <- list()
+  triples[[1]] <- list(0.04, 0.05, 'NO')
+  triples[[2]] <- list(0.03, 0.025, 'NO')
+
+  expected_df = as.data.frame(do.call(rbind, triples))
+  colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+
+  # When
+  actual_df <-
+    get_alphas_bh(list(0.04, 0.03), output = "data_frame")
 
   # Then
   expect_equal(actual_df, expected_df)
