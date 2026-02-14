@@ -53,7 +53,6 @@ get_alphas_bh <-
       )
     }
 
-    # --- Start of Step-Up Logic Fix ---
     size <- length(p_values)
     p_values_vec <- unlist(p_values)
 
@@ -90,12 +89,10 @@ get_alphas_bh <-
         significant_ranks[current_rank]
       )
     }
-    # --- End of Fix ---
 
     df = as.data.frame(do.call(rbind, triples))
 
     # Ensure columns are vectors (doubles/characters) and not lists
-    # This prevents the test failure where 'expected' is double but 'actual' is list
     df[[1]] <- as.numeric(df[[1]])
     df[[2]] <- as.numeric(df[[2]])
     df[[3]] <- as.character(df[[3]])
