@@ -12,36 +12,17 @@ get_alphas_bh(
 )
 }
 \arguments{
-\item{p_values}{A list of p-values.}
+\item{p_values}{A numeric vector of p-values.}
 
-\item{Q}{the false discovery rate. If not provided, a default value of 0.05
-is used.}
+\item{Q}{The false discovery rate (default 0.05).}
 
-\item{output}{An option to control the function's output. Valid values are:
-\itemize{
-\item print - print the data frame to the console only.
-\item data_frame - return the data_frame only.
-\item both - print the data frame to the console and return it.
-The default is 'both' so if you do not provide this option the data frame
-will be printed to the console and returned.
-}}
+\item{output}{"print", "data_frame", or "both".}
 
-\item{include_is_significant_column}{This Boolean option will control if the
-is significant? column is included in the printed or returned data frame.
-If TRUE, it will be included. If FALSE, it will be omitted. The default is
-TRUE so if you do not provide this option the is significant? column will
-be included.}
+\item{include_is_significant_column}{Boolean to include significance column.}
 }
 \value{
-A list of alpha values or an error message if the provided p-values
-are not valid.
+A data frame containing p-values, alphas, and significance.
 }
 \description{
-This function calculates alphas for a list of p-values and for a given false
-discovery rate (Q). If Q is not provided, a default value of 0.05 is used.
-The Benjamini-Hochberg alpha correction is calculated as:
-alpha=(i/m)Q, where:
-i = the individual p-value's rank in the list of p-values,
-m = the total number of tests, and
-Q = the false discovery rate.
+Calculate Benjamini-Hochberg alphas for a list of p-values.
 }
