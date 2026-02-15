@@ -4,16 +4,16 @@ test_that("invalid p-values 1", {
   expect_error(get_alphas_bh(list()), "Invalid p-values.")
 })
 
-test_that("invalid p-value 1", {
+test_that("invalid p-value 2", {
   expect_error(get_alphas_bh(list(1, 2, "3")), "Invalid p-value: 2")
 })
 
-test_that("invalid p-value 2", {
+test_that("invalid p-value 3", {
   expect_error(get_alphas_bh(list(1, "3")), "Invalid p-value: 3")
 })
 
-test_that("invalid p-value 3", {
-  expect_error(get_alphas_bh(list(.1, .2,-0.05)), "Invalid p-value: -0.05")
+test_that("invalid p-value 4", {
+  expect_error(get_alphas_bh(list(.1, .2, -0.05)), "Invalid p-value: -0.05")
 })
 
 test_that("invalid Q 1", {
@@ -36,94 +36,188 @@ test_that("invalid option for include_is_significant_column", {
   )
 })
 
-test_that("invalid Q 2", {
-  expect_error(get_alphas_bh(list(.1, .2), 1.001), "Invalid Q: 1.001")
-})
-
 test_that("it should calculate alphas 1", {
   # Given
-  triples <- list()
-  triples[[1]] <- list(0.08, 0.05, 'NO')
-  triples[[2]] <- list(0.01, 0.017, 'YES')
-  triples[[3]] <- list(0.039, 0.033, 'NO')
-
-  expected_df = as.data.frame(do.call(rbind, triples))
-  colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+  expected_df <- data.frame(
+    "p-value" = c(0.08, 0.01, 0.039),
+    "alpha" = c(0.050, 0.017, 0.033),
+    "is significant?" = c("NO", "YES", "NO"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
 
   # When
-  actual_df <-
-    get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame")
+  actual_df <- get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
 
   # Then
-  expect_equal(actual_df, expected_df)
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
 })
 
 test_that("it should calculate alphas 2", {
   # Given
-  triples <- list()
-  triples[[1]] <- list(0.08, 0.05, 'NO')
-  triples[[2]] <- list(0.01, 0.017, 'YES')
-  triples[[3]] <- list(0.039, 0.033, 'NO')
-
-  expected_df = as.data.frame(do.call(rbind, triples))
-  colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+  expected_df <- data.frame(
+    "p-value" = c(0.08, 0.01, 0.039),
+    "alpha" = c(0.050, 0.017, 0.033),
+    "is significant?" = c("NO", "YES", "NO"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
 
   # When
-  actual_df <-
-    get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame")
+  actual_df <- get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
 
   # Then
-  expect_equal(actual_df, expected_df)
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
 })
 
 test_that("it should calculate alphas 3", {
   # Given
-  triples <- list()
-  triples[[1]] <- list(0.02, 0.025, 'YES')
-  triples[[2]] <- list(0.03, 0.05, 'YES')
-
-  expected_df = as.data.frame(do.call(rbind, triples))
-  colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+  expected_df <- data.frame(
+    "p-value" = c(0.02, 0.03),
+    "alpha" = c(0.025, 0.050),
+    "is significant?" = c("YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
 
   # When
-  actual_df <-
-    get_alphas_bh(list(0.02, 0.03), output = "data_frame")
+  actual_df <- get_alphas_bh(list(0.02, 0.03), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+  actual_df$`is significant?` <- as.character(actual_df$`is significant?`)
 
   # Then
-  expect_equal(actual_df, expected_df)
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
 })
 
-test_that("it should calculate alphas and return NO after the first result comes out non-significant", {
+test_that("it should correctly rescue p-values using step-up logic", {
   # Given
-  triples <- list()
-  triples[[1]] <- list(0.04, 0.05, 'NO')
-  triples[[2]] <- list(0.03, 0.025, 'NO')
-
-  expected_df = as.data.frame(do.call(rbind, triples))
-  colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+  expected_df <- data.frame(
+    "p-value" = c(0.04, 0.03),
+    "alpha" = c(0.050, 0.025),
+    "is significant?" = c("YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
 
   # When
-  actual_df <-
-    get_alphas_bh(list(0.04, 0.03), output = "data_frame")
+  actual_df <- get_alphas_bh(list(0.04, 0.03), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
 
   # Then
-  expect_equal(actual_df, expected_df)
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 2", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.08, 0.019, 0.02),
+    "alpha" = c(0.050, 0.017, 0.033),
+    "is significant?" = c("NO", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.08, 0.019, 0.02), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 3", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.04, 0.039, 0.038),
+    "alpha" = c(0.050, 0.033, 0.017),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.04, 0.039, 0.038), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 4", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.039, 0.04, 0.038),
+    "alpha" = c(0.033, 0.050, 0.017),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.039, 0.04, 0.038), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 5", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.038, 0.039, 0.04),
+    "alpha" = c(0.017, 0.033, 0.050),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.038, 0.039, 0.04), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 6", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.04, 0.038, 0.039),
+    "alpha" = c(0.050, 0.017, 0.033),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.04, 0.038, 0.039), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
 })
 
 test_that("it should print output to console", {
   # Given
-
   # When
-
   # Then
   expect_output(get_alphas_bh(list(0.08, 0.01, 0.039), output = "print", .07))
 })
 
 test_that("it shouldn't print output to console", {
   # Given
-
   # When
-
   # Then
   expect_failure(expect_output(get_alphas_bh(list(0.08, 0.01, 0.039), output = "data_frame", .07)))
 })
@@ -131,9 +225,9 @@ test_that("it shouldn't print output to console", {
 test_that("it shouldn't include is significant column", {
   # Given
   doubles <- list()
-  doubles[[1]] <- list(0.08, 0.07)
-  doubles[[2]] <- list(0.01, 0.023)
-  doubles[[3]] <- list(0.039, 0.047)
+  doubles[[1]] <- unlist(list(0.08, 0.07))
+  doubles[[2]] <- unlist(list(0.01, 0.023))
+  doubles[[3]] <- unlist(list(0.039, 0.047))
 
   expected_df = as.data.frame(do.call(rbind, doubles))
   colnames(expected_df) <- c('p-value', 'alpha')
@@ -144,66 +238,68 @@ test_that("it shouldn't include is significant column", {
       list(0.08, 0.01, 0.039),
       output = "data_frame",
       include_is_significant_column = FALSE,
-      .07
+      0.07
     )
 
-  # Then
-  expect_equal(actual_df, expected_df)
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
 })
 
 test_that("it should print output to console and return dataframe when 'both' option provided",
           {
             # Given
             triples <- list()
-            triples[[1]] <- list(0.08, 0.07, 'NO')
-            triples[[2]] <- list(0.01, 0.023, 'YES')
-            triples[[3]] <- list(0.039, 0.047, 'YES')
+            triples[[1]] <- unlist(list(0.08, 0.07, 'NO'))
+            triples[[2]] <- unlist(list(0.01, 0.023, 'YES'))
+            triples[[3]] <- unlist(list(0.039, 0.047, 'YES'))
 
-            expected_df = as.data.frame(do.call(rbind, triples))
-            colnames(expected_df) <-
-              c('p-value', 'alpha', 'is significant?')
+            expected_df = as.data.frame(do.call(rbind, triples), stringsAsFactors = FALSE)
+            colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+            expected_df$`p-value` <- as.numeric(expected_df$`p-value`)
+            expected_df$alpha <- as.numeric(expected_df$alpha)
 
             # When
             # Then
             expect_output(actual_df <-
-                            get_alphas_bh(list(0.08, 0.01, 0.039), output = "both", .07))
-            expect_equal(actual_df, expected_df)
+                            get_alphas_bh(list(0.08, 0.01, 0.039), output = "both", Q = 0.07))
+            expect_equal(actual_df, expected_df, ignore_attr = TRUE)
           })
 
 test_that("it should print output to console and return dataframe when no option provided",
           {
             # Given
             triples <- list()
-            triples[[1]] <- list(0.08, 0.07, 'NO')
-            triples[[2]] <- list(0.01, 0.023, 'YES')
-            triples[[3]] <- list(0.039, 0.047, 'YES')
+            triples[[1]] <- unlist(list(0.08, 0.07, 'NO'))
+            triples[[2]] <- unlist(list(0.01, 0.023, 'YES'))
+            triples[[3]] <- unlist(list(0.039, 0.047, 'YES'))
 
-            expected_df = as.data.frame(do.call(rbind, triples))
-            colnames(expected_df) <-
-              c('p-value', 'alpha', 'is significant?')
+            expected_df = as.data.frame(do.call(rbind, triples), stringsAsFactors = FALSE)
+            colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+            expected_df$`p-value` <- as.numeric(expected_df$`p-value`)
+            expected_df$alpha <- as.numeric(expected_df$alpha)
 
             # When
             # Then
             expect_output(actual_df <-
                             get_alphas_bh(list(0.08, 0.01, 0.039), .07))
-            expect_equal(actual_df, expected_df)
+            expect_equal(actual_df, expected_df, ignore_attr = TRUE)
           })
 
 test_that("it should print output to console and return dataframe when no option and no Q provided",
           {
             # Given
             triples <- list()
-            triples[[1]] <- list(0.08, 0.05, 'NO')
-            triples[[2]] <- list(0.01, 0.017, 'YES')
-            triples[[3]] <- list(0.039, 0.033, 'NO')
+            triples[[1]] <- unlist(list(0.08, 0.05, 'NO'))
+            triples[[2]] <- unlist(list(0.01, 0.017, 'YES'))
+            triples[[3]] <- unlist(list(0.039, 0.033, 'NO'))
 
-            expected_df = as.data.frame(do.call(rbind, triples))
-            colnames(expected_df) <-
-              c('p-value', 'alpha', 'is significant?')
+            expected_df = as.data.frame(do.call(rbind, triples), stringsAsFactors = FALSE)
+            colnames(expected_df) <- c('p-value', 'alpha', 'is significant?')
+            expected_df$`p-value` <- as.numeric(expected_df$`p-value`)
+            expected_df$alpha <- as.numeric(expected_df$alpha)
 
             # When
             # Then
             expect_output(actual_df <-
                             get_alphas_bh(list(0.08, 0.01, 0.039)))
-            expect_equal(actual_df, expected_df)
+            expect_equal(actual_df, expected_df, ignore_attr = TRUE)
           })

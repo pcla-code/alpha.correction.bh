@@ -52,28 +52,53 @@ get_alphas_bh <-
         include_is_significant_column
       )
     }
+
     size <- length(p_values)
-    p_values_map <- setNames(p_values, 1:size)
-    sorted_p_values_map <- p_values_map[order(unlist(p_values_map))]
-    sorted_p_values = lapply(p_values, sort)
-    alphas = list()
-    p_value_indexes <- names(sorted_p_values_map)
-    triples <- list()
-    sig <- TRUE
-    for (i in 1:size) {
-      curr_alpha <- (i / size) * Q
-      curr_p_value <- as.double(p_values[as.integer(p_value_indexes[i])])
-      alphas = append(alphas, curr_alpha)
+    p_values_vec <- unlist(p_values)
 
-      is_significant_logical <- sig && (curr_p_value < curr_alpha)
-      is_significant <- ifelse(is_significant_logical, "YES", "NO")
-      sig <- is_significant_logical
+    # Get the rank order
+    sorted_indices <- order(p_values_vec)
+    sorted_p_values <- p_values_vec[sorted_indices]
 
-      triples[[as.integer(p_value_indexes[i])]] <-
-        list(curr_p_value, round(curr_alpha, digits = 3), is_significant)
+    # Calculate all adjusted alphas: (i/m)*Q
+    adjusted_alphas <- (1:size / size) * Q
+
+    # Find the largest k such that P_(k) <= (k/size)*Q
+    is_less_equal <- sorted_p_values <= adjusted_alphas
+    max_k <- if (any(is_less_equal))
+      max(which(is_less_equal))
+    else
+      0
+
+    # Determine significance for all (Step-Up rule)
+    # Everything rank 1 to max_k is significant
+    significant_ranks <- rep("NO", size)
+    if (max_k > 0) {
+      significant_ranks[1:max_k] <- "YES"
     }
+
+    # --- Reconstruct 'triples' to match original order ---
+    triples <- list()
+    for (i in 1:size) {
+      # Find the rank of the original i-th p-value
+      current_rank <- which(sorted_indices == i)
+
+      triples[[i]] <- list(
+        as.double(p_values_vec[i]),
+        round(adjusted_alphas[current_rank], digits = 3),
+        significant_ranks[current_rank]
+      )
+    }
+
     df = as.data.frame(do.call(rbind, triples))
+
+    # Ensure columns are vectors (doubles/characters) and not lists
+    df[[1]] <- as.numeric(df[[1]])
+    df[[2]] <- as.numeric(df[[2]])
+    df[[3]] <- as.character(df[[3]])
+
     colnames(df) <- c('p-value', 'alpha', 'is significant?')
+
     if (output == "both") {
       print_output(df, include_is_significant_column)
       return(get_columns(df, include_is_significant_column))
@@ -83,7 +108,6 @@ get_alphas_bh <-
       return(get_columns(df, include_is_significant_column))
     }
   }
-
 
 print_output <- function(df, include_is_significant_column) {
   if (include_is_significant_column) {
