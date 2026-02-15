@@ -113,6 +113,101 @@ test_that("it should correctly rescue p-values using step-up logic", {
   expect_equal(actual_df, expected_df, ignore_attr = TRUE)
 })
 
+test_that("it should correctly rescue p-values using step-up logic 2", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.08, 0.019, 0.02),
+    "alpha" = c(0.050, 0.017, 0.033),
+    "is significant?" = c("NO", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.08, 0.019, 0.02), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 3", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.04, 0.039, 0.038),
+    "alpha" = c(0.050, 0.033, 0.017),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.04, 0.039, 0.038), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 4", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.039, 0.04, 0.038),
+    "alpha" = c(0.033, 0.050, 0.017),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.039, 0.04, 0.038), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 5", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.038, 0.039, 0.04),
+    "alpha" = c(0.017, 0.033, 0.050),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.038, 0.039, 0.04), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
+test_that("it should correctly rescue p-values using step-up logic 6", {
+  # Given
+  expected_df <- data.frame(
+    "p-value" = c(0.04, 0.038, 0.039),
+    "alpha" = c(0.050, 0.017, 0.033),
+    "is significant?" = c("YES", "YES", "YES"),
+    check.names = FALSE,
+    stringsAsFactors = FALSE
+  )
+
+  # When
+  actual_df <- get_alphas_bh(list(0.04, 0.038, 0.039), output = "data_frame")
+  actual_df$`p-value` <- as.numeric(actual_df$`p-value`)
+  actual_df$alpha <- as.numeric(actual_df$alpha)
+
+  # Then
+  expect_equal(actual_df, expected_df, ignore_attr = TRUE)
+})
+
 test_that("it should print output to console", {
   # Given
   # When
