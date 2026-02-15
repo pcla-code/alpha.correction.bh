@@ -1,6 +1,6 @@
 Package: alpha.correction.bh
 Title: Benjamini-Hochberg Alpha Correction
-Version: 0.0.2
+Version: 0.1.0
 Authors@R: 
     person("Michael", "Mogessie", , "mogessie@upenn.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-6769-5941"))
